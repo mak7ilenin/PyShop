@@ -1,3 +1,5 @@
+import array as arr
+
 operation = 0
 
 while operation != 7:
@@ -20,6 +22,13 @@ while operation != 7:
         print("Введите фамилию: ")
         secondName = input()
         print(secondName)
+        
+        print("Введите бабки: ")
+        money = int(input())
+        print(money)
+        
+        clientArr = [firstName, secondName, money]
+        print(clientArr)
     elif choose == 3:
         print("Введите название продукта: ")
         productName = input()
@@ -28,10 +37,13 @@ while operation != 7:
         print("Введите цену: ")
         productPrice = int(input())
         print(productPrice)
+        
     elif choose == 5:
-        print("Введите бабки: ")
-        money = int(input())
-        print(money)
+        print("Добавить бабки: ")
+        addMoney = int(input())
+        sumMoney = addMoney + money
+        print(sumMoney)
+        
     elif choose == 7:
         print("Вы вышли")
         break
