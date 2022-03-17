@@ -33,38 +33,56 @@ while operation != 7:
         phone = input()
 
         print("Введите бабки: ")
-        money = int(input())
+        money = float(input())
 
         # with open(clientFile, "a") as file:
         #     file.write(firstName + "\n" + lastName + "\n" + str(phone) + "\n" + str(money) + "\n")
-
-        cursor.execute('CREATE TABLE tClient(firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
-        cursor.execute("INSERT INTO tClient VALUES (%s, %s, %s, %s)", (firstName, lastName, phone, money))
-        conn.commit()
-        conn.close()
+        try:
+            cursor.execute('CREATE TABLE tClient(firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
+        except:
+            cursor.execute("INSERT INTO tClient VALUES (%s, %s, %s, %s)", (firstName, lastName, phone, money))
+            conn.commit()
+            conn.close()
             
     elif choose == 2:
         print("Список клиентов: ")
-        # # clientLine = file.readline()
-        # with open("client.txt", "r") as q:
-        #     for i in q:
-        #         print("Имя: ",i)
-        
-
-
-           
+        cursor.execute('SELECT * FROM tClient')
+        record = cursor.fetchall()
+        print("==================")
+        for row in record:
+            print("Имя: ", row[0])
+            print("Фамилия: ", row[1])
+            print("Телефон: ", row[2])
+            print("Кошелек: ", row[3], "$")
+            print("==================")
+          
     elif choose == 3:
         print("Введите название продукта: ")
         productName = input()
         
-        print("Введите вес товара: ")
-        productWeight = int(input())
+        print("Введите вес товара в граммах: ")
+        productWeight = float(input())
 
         print("Введите цену: ")
-        productPrice = int(input())
+        productPrice = float(input())
         
-        with open(clientFile, "a") as file:
-            file.write(productName + "\n" + str(productWeight) + "\n" + str(productPrice) + "\n")
+        try:
+            cursor.execute('CREATE TABLE tProduct(productName varchar(25) not null, productWeight float not null, productPrice float not null)')
+        except:
+            cursor.execute("INSERT INTO tProduct VALUES (%s, %s, %s)", (productName, productWeight, productPrice))
+            conn.commit()
+            conn.close()
+    
+    elif choose == 4:
+        print("Список продуктов: ")
+        cursor.execute('SELECT * FROM tProduct')
+        record = cursor.fetchall()
+        print("==================")
+        for row in record:
+            print("Название: ", row[0])
+            print("Вес: ", row[1], "г")
+            print("Цена: ", row[2], "$")
+            print("==================")
 
     elif choose == 5:
         print("Добавить бабки: ")
