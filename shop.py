@@ -8,6 +8,7 @@ from product import Product
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
 cursor = conn.cursor()
 
+
 operation = 0
 
 while operation != 7:
@@ -29,14 +30,18 @@ while operation != 7:
         lastName = input()
         
         print("Введите мобилу: ")
-        phone = int(input())
+        phone = input()
 
         print("Введите бабки: ")
         money = int(input())
 
-        with open(clientFile, "a") as file:
-            file.write(firstName + "\n" + lastName + "\n" + str(phone) + "\n" + str(money) + "\n")
+        # with open(clientFile, "a") as file:
+        #     file.write(firstName + "\n" + lastName + "\n" + str(phone) + "\n" + str(money) + "\n")
 
+        cursor.execute('CREATE TABLE tClient(firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
+        cursor.execute("INSERT INTO tClient VALUES (%s, %s, %s, %s)", (firstName, lastName, phone, money))
+        conn.commit()
+        conn.close()
             
     elif choose == 2:
         print("Список клиентов: ")
@@ -86,15 +91,6 @@ while operation != 7:
 
 
 
-# cursor.execute('''
-#                 INSERT INTO client (firstName, lastName, phone, money)
-#                 values
-#                 ("dsf"),("dfsdf"),(2342),(432)
-#                 ''')
-# cursor.execute('CREATE TABLE tClient(firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
-# cursor.execute('INSERT INTO tClient (firstName, lastName, phone, money) values("dsf"),("dfsdf"),(2342),(432)')
-# conn.commit()
-# conn.close()
 # for i in cursor:
 #     print(i)
 # print(cl.firstName, cl.money, cl.phone, cl.money)
