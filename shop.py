@@ -1,8 +1,6 @@
 import array as arr
 from sqlite3 import Cursor
 import mysql.connector
-from client import Client
-from product import Product
 
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
@@ -37,24 +35,34 @@ while operation != 7:
 
         # with open(clientFile, "a") as file:
         #     file.write(firstName + "\n" + lastName + "\n" + str(phone) + "\n" + str(money) + "\n")
+
         try:
-            cursor.execute('CREATE TABLE tClient(firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
+            cursor.execute('CREATE TABLE tClient(clientID int identity primary key not null, firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
+            conn.commit()
         except:
+            print("")
+        try:
             cursor.execute("INSERT INTO tClient VALUES (%s, %s, %s, %s)", (firstName, lastName, phone, money))
             conn.commit()
-            conn.close()
+            print("Пользователь", firstName, lastName, "добавлен в базу")
+            print("=======================================")
+        except:
+            print("Авария! Нет электричества! Ждём!")
             
     elif choose == 2:
         print("Список клиентов: ")
-        cursor.execute('SELECT * FROM tClient')
-        record = cursor.fetchall()
-        print("==================")
-        for row in record:
-            print("Имя: ", row[0])
-            print("Фамилия: ", row[1])
-            print("Телефон: ", row[2])
-            print("Кошелек: ", row[3], "$")
+        try:
+            cursor.execute('SELECT * FROM tClient')
+            record = cursor.fetchall()
             print("==================")
+            for row in record:
+                print("Имя: ", row[0])
+                print("Фамилия: ", row[1])
+                print("Телефон: ", row[2])
+                print("Кошелек: ", row[3], "$")
+                print("==================")
+        except:
+            print("В базе нет ни одного клиента!")
           
     elif choose == 3:
         print("Введите название продукта: ")
@@ -68,21 +76,30 @@ while operation != 7:
         
         try:
             cursor.execute('CREATE TABLE tProduct(productName varchar(25) not null, productWeight float not null, productPrice float not null)')
+            conn.commit()
         except:
+            print("")
+        try:
             cursor.execute("INSERT INTO tProduct VALUES (%s, %s, %s)", (productName, productWeight, productPrice))
             conn.commit()
-            conn.close()
+            print(productName, "добавлен в базу")
+            print("=======================================")
+        except:
+            print("Авария! Нет электричества! Ждём!")
     
     elif choose == 4:
         print("Список продуктов: ")
-        cursor.execute('SELECT * FROM tProduct')
-        record = cursor.fetchall()
-        print("==================")
-        for row in record:
-            print("Название: ", row[0])
-            print("Вес: ", row[1], "г")
-            print("Цена: ", row[2], "$")
+        try:
+            cursor.execute('SELECT * FROM tProduct')
+            record = cursor.fetchall()
             print("==================")
+            for row in record:
+                print("Название: ", row[0])
+                print("Вес: ", row[1], "г")
+                print("Цена: ", row[2], "$")
+                print("==================")
+        except:
+            print("В базе нет ни одного продукта!")
 
     elif choose == 5:
         print("Добавить бабки: ")
@@ -93,22 +110,3 @@ while operation != 7:
     elif choose == 7:
         print("Вы вышли")
         break
-    
-
-# cl = Client(firstName, lastName, phone, money)
-# cl.printClient()
-
-# productName = input()
-# productPrice = int(input())
-# productWeight = int(input())
-
-# pr = Product(productName, productPrice, productWeight)
-# pr.printProduct()
-
-
-
-
-
-# for i in cursor:
-#     print(i)
-# print(cl.firstName, cl.money, cl.phone, cl.money)
