@@ -73,3 +73,41 @@ def listProducts():
             print("==================")
     except:
         print("В наличии нет ни одного продукта!")
+
+
+'''ПОКУПКА'''
+
+def Buy():
+    print("Покупка продуктов: ")
+    print("===================")
+    listProducts()
+    chooseProduct = int(input("Выберите продукт: "))
+    cursor.execute('SELECT productID FROM tProduct')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseProduct == row[0]:
+            print("")
+            break
+        else:
+            print("===================")
+            print("Нет такого продукта!")
+            print("===================")
+            return
+
+    print("===================")
+    listClients()
+    chooseClient = int(input("Выберите клиента: "))
+    cursor.execute('SELECT clientID FROM tClient')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseClient == row[0]:
+            print("")
+            break
+        else:
+            print("===================")
+            print("Нет такого клиента!")
+            print("===================")
+            return
+    
+    
+    
