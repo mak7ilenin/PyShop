@@ -56,8 +56,7 @@ while operation != 7:
     elif choose == 5:
         print("Добавить бабки: ")
         addMoney = int(input())
-        sumMoney = addMoney + money
-        print(sumMoney)
+        
 
     elif choose == 6:
         Buy()

@@ -47,13 +47,10 @@ def listClients():
     try:
         cursor.execute('SELECT * FROM tClient')
         record = cursor.fetchall()
-        print("==================")
+        print("==================================================================================")
         for row in record:
-            print("Имя: ", row[1])
-            print("Фамилия: ", row[2])
-            print("Телефон: ", row[3])
-            print("Кошелек: ", row[4], "$")
-            print("==================")
+            print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
+            print("==================================================================================")
     except:
         print("В наличии нет ни одного клиента!")
 
@@ -65,12 +62,10 @@ def listProducts():
     try:
         cursor.execute('SELECT * FROM tProduct')
         record = cursor.fetchall()
-        print("==================")
+        print("==================================================================================")
         for row in record:
-            print("Название: ", row[1])
-            print("Вес: ", row[2], "г")
-            print("Цена: ", row[3], "$")
-            print("==================")
+            print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+            print("==================================================================================")
     except:
         print("В наличии нет ни одного продукта!")
 
@@ -97,10 +92,11 @@ def Buy():
     print("===================")
     listClients()
     chooseClient = int(input("Выберите клиента: "))
-    cursor.execute('SELECT clientID FROM tClient')
+    cursor.execute('SELECT clientID, money FROM tClient')
     record = cursor.fetchall()
     for row in record:
         if chooseClient == row[0]:
+            clientMoney = row[1]
             print("")
             break
         else:
@@ -108,6 +104,7 @@ def Buy():
             print("Нет такого клиента!")
             print("===================")
             return
+    print(clientMoney)
     
     
     
