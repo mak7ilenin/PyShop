@@ -1,15 +1,37 @@
-from distutils.errors import DistutilsFileError
 from sqlite3 import Cursor
-from xmlrpc.client import boolean
 import mysql.connector
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
 cursor = conn.cursor()
 
 
+'''ВОЗВРАЩЕНИЕ В МЕНЮ'''
+
+def goNext():
+    print("\n====================")
+    print("Вернуться в меню?")
+    goNext = int(input("1 - да // 2 - выйти: "))
+    print("====================")
+    if goNext == 1:
+        print("")
+    else:
+        quit()
+
+
 '''ДОБАВЛЕНИЕ КЛИЕНТА'''
 
-def addClient(firstName, lastName, phone, money):
+def addClient():
+    print("Введите имя: ")
+    firstName = input()
+    
+    print("Введите фамилию: ")
+    lastName = input()
+    
+    print("Введите мобилу: ")
+    phone = input()
+
+    print("Введите бабки: ")
+    money = float(input())
     try:
         cursor.execute('CREATE TABLE tClient(clientID int AUTO_INCREMENT primary key, firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
         conn.commit()
@@ -27,7 +49,15 @@ def addClient(firstName, lastName, phone, money):
 
 '''ДОБАВЛЕНИЕ ПРОДУКТА'''
 
-def addProduct(productName, productWeight, productPrice):
+def addProduct():
+    print("Введите название продукта: ")
+    productName = input()
+    
+    print("Введите вес товара в граммах: ")
+    productWeight = float(input())
+
+    print("Введите цену: ")
+    productPrice = float(input())
     try:
         cursor.execute('CREATE TABLE tProduct(productID int AUTO_INCREMENT primary key, productName varchar(25) not null, productWeight float not null, productPrice float not null)')
         conn.commit()
@@ -140,8 +170,102 @@ def Buy():
             print("Покупка совершена успешно!")
             print("Текущий остаток: ", purchaseMoney, "$")
         else:
+            print("")
+            print("======================")
             print("Недостаточно средств!")
+            print("======================")
             return
     else:
         print("Авария! Нет электричества! Ждём!")
         return
+
+
+'''ИЗМЕНЕНИЕ ПРОДУКТА'''
+
+def editProduct():
+    print("Изменение продукта")
+    print("===================")
+    listProducts()
+    print("Выберите продукт, который хотите изменить: ")
+    chooseEditProduct = int(input())
+    cursor.execute('SELECT productID from tProduct')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseEditProduct == row[0]:
+            print("")
+            break
+        else:
+            print("===================")
+            print("Нет такого продукта!")
+            print("===================")
+            return
+    cursor.execute('SELECT * FROM tProduct')
+    record = cursor.fetchall()
+    for row in record:
+        print("==================================================================================")
+        print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+        print("==================================================================================\n")
+    print("Изменить этот продукт?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        print("Изменить название товара: ")
+        editProductName = input()
+        
+        print("Изменить вес товара в граммах: ")
+        editProductWeight = float(input())
+
+        print("Изменить цену товара: ")
+        editProductPrice = float(input())
+
+        # listChooseEditProduct = [chooseEditProduct]
+        cursor.execute("UPDATE tProduct SET productName = %s, productWeight = %s, productPrice = %s WHERE tProduct.productID = %s", (editProductName, editProductWeight, editProductPrice, chooseEditProduct))
+        conn.commit()
+        print("\n================================================================================")
+        print("Измененный продукт:", editProductName, "//", editProductWeight, "//", editProductPrice)
+
+
+'''ИЗМЕНЕНИЕ КЛИЕНТА'''
+
+def editClient():
+    print("Изменение пользователя")
+    print("===================")
+    listClients()
+    print("Выберите пользователя, которого хотите изменить: ")
+    chooseEditClient = int(input())
+    cursor.execute('SELECT clientID from tClient')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseEditClient == row[0]:
+            print("")
+            break
+        else:
+            print("========================")
+            print("Нет такого пользователя!")
+            print("========================")
+            return
+    cursor.execute('SELECT * FROM tClient')
+    record = cursor.fetchall()
+    for row in record:
+        print("=====================================================================================")
+        print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
+        print("=====================================================================================\n")
+    print("Изменить этого пользователя?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        print("Введите новое имя: ")
+        editFirstName = input()
+       
+        print("Введите новую фамилию: ")
+        editLastName = input()
+        
+        print("Введите новую мобилу: ")
+        editPhone = input()
+
+        print("Изменить бабки: ")
+        editMoney = float(input())
+
+        listChooseEditClient = [chooseEditClient]
+        cursor.execute("UPDATE tProduct SET firstName = %s, lastName = %s, phone = %s, money = %s WHERE tClient.clientID = %s", (editFirstName, editLastName, editPhone, editMoney, listChooseEditClient))
+        conn.commit()
+        print("\n================================================================================")
+        print("Измененный пользователь:", editFirstName, "//", editLastName, "//", editPhone, "//", editMoney)
