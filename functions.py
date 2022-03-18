@@ -1,4 +1,6 @@
+from distutils.errors import DistutilsFileError
 from sqlite3 import Cursor
+from xmlrpc.client import boolean
 import mysql.connector
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
@@ -43,12 +45,13 @@ def addProduct(productName, productWeight, productPrice):
 '''СПИСОК КЛИЕНТОВ'''
 
 def listClients():
-    print("Список клиентов: ")
+    print("Список пользователей: ")
     try:
         cursor.execute('SELECT * FROM tClient')
         record = cursor.fetchall()
         print("==================================================================================")
         for row in record:
+            print("Пользователь номер -", row[0])
             print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
             print("==================================================================================")
     except:
@@ -64,6 +67,7 @@ def listProducts():
         record = cursor.fetchall()
         print("==================================================================================")
         for row in record:
+            print("Продукт номер -", row[0])
             print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
             print("==================================================================================")
     except:
@@ -73,9 +77,11 @@ def listProducts():
 '''ПОКУПКА'''
 
 def Buy():
-    print("Покупка продуктов: ")
+    print("Покупка продуктов")
     print("===================")
     listProducts()
+
+    '''НАХОЖДЕНИЕ ПРОДУКТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
     chooseProduct = int(input("Выберите продукт: "))
     cursor.execute('SELECT productID FROM tProduct')
     record = cursor.fetchall()
@@ -90,21 +96,52 @@ def Buy():
             return
 
     print("===================")
-    listClients()
+    listClients()   
+    
+    '''НАХОЖДЕНИЕ КЛИЕНТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
     chooseClient = int(input("Выберите клиента: "))
-    cursor.execute('SELECT clientID, money FROM tClient')
+    cursor.execute('SELECT clientID FROM tClient')
     record = cursor.fetchall()
     for row in record:
         if chooseClient == row[0]:
-            clientMoney = row[1]
             print("")
             break
+    
+    '''НАХОЖДЕНИЕ ДЕНЕГ КЛИЕНТА ПО ЕГО ID '''
+
+    listChooseClient = [chooseClient]
+    cursor.execute('SELECT money FROM tClient WHERE clientID = %s', (listChooseClient))
+    record = cursor.fetchall()
+    for row in record:
+        clientMoney = row[0]
+
+
+    '''НАХОЖДЕНИЕ ДЕНЕГ ПРОДУКТА ПО ЕГО ID '''
+    
+    listChooseProduct = [chooseProduct]
+    cursor.execute('SELECT productPrice FROM tProduct WHERE productID = %s', (listChooseProduct))
+    record = cursor.fetchall()
+    for row in record:
+        productPrice = row[0]
+
+    cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseProduct))
+    record = cursor.fetchall()
+    for row in record:
+        print("==================================================================================")
+        print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+        print("==================================================================================\n")
+    print("Купить этот продукт?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        if clientMoney >= productPrice:
+            purchaseMoney = clientMoney - productPrice
+            cursor.execute('UPDATE tClient SET money = %s WHERE tClient.clientID = %s', (purchaseMoney, chooseClient))
+            conn.commit()
+            print("Покупка совершена успешно!")
+            print("Текущий остаток: ", purchaseMoney, "$")
         else:
-            print("===================")
-            print("Нет такого клиента!")
-            print("===================")
+            print("Недостаточно средств!")
             return
-    print(clientMoney)
-    
-    
-    
+    else:
+        print("Авария! Нет электричества! Ждём!")
+        return
