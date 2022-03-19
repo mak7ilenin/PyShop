@@ -318,6 +318,7 @@ def editClient():
 
 
 
+'''ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ'''
 
 def addMoney():
     print("==============================")
@@ -352,7 +353,7 @@ def addMoney():
         print("")
         addMoney = 0
         while addMoney == 0:
-            addMoney = float(input("Введите сумму: "))
+            addMoney = float(input("Введите сумму больше нуля: "))
             if addMoney > 0:              
                 cursor.execute('SELECT money from tClient WHERE tClient.clientID = %s', (listChooseClientToAddMoney))
                 record = cursor.fetchall()
