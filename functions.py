@@ -1,5 +1,6 @@
 from sqlite3 import Cursor
 import mysql.connector
+from mysqlx import RowResult
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
 cursor = conn.cursor()
@@ -8,10 +9,10 @@ cursor = conn.cursor()
 '''ВОЗВРАЩЕНИЕ В МЕНЮ'''
 
 def goNext():
-    print("\n====================")
+    print("\n=========================")
     print("Вернуться в меню?")
     goNext = int(input("1 - да // 2 - выйти: "))
-    print("====================")
+    print("========================")
     if goNext == 1:
         print("")
     else:
@@ -32,6 +33,7 @@ def addClient():
 
     print("Введите бабки: ")
     money = float(input())
+    
     try:
         cursor.execute('CREATE TABLE tClient(clientID int AUTO_INCREMENT primary key, firstName varchar(25) not null, lastName varchar(25) not null, phone varchar(8) not null, money float not null)')
         conn.commit()
@@ -119,11 +121,6 @@ def Buy():
         if chooseProduct == row[0]:
             print("")
             break
-        else:
-            print("===================")
-            print("Нет такого продукта!")
-            print("===================")
-            return
 
     print("===================")
     listClients()   
@@ -140,8 +137,12 @@ def Buy():
     '''НАХОЖДЕНИЕ ДЕНЕГ КЛИЕНТА ПО ЕГО ID '''
 
     listChooseClient = [chooseClient]
-    cursor.execute('SELECT money FROM tClient WHERE clientID = %s', (listChooseClient))
-    record = cursor.fetchall()
+    try:
+        cursor.execute('SELECT money FROM tClient WHERE clientID = %s', (listChooseClient))
+        record = cursor.fetchall()
+    except:
+        print("Ошибка!")
+        return
     for row in record:
         clientMoney = row[0]
 
@@ -149,8 +150,12 @@ def Buy():
     '''НАХОЖДЕНИЕ ДЕНЕГ ПРОДУКТА ПО ЕГО ID '''
     
     listChooseProduct = [chooseProduct]
-    cursor.execute('SELECT productPrice FROM tProduct WHERE productID = %s', (listChooseProduct))
-    record = cursor.fetchall()
+    try:
+        cursor.execute('SELECT productPrice FROM tProduct WHERE productID = %s', (listChooseProduct))
+        record = cursor.fetchall()
+    except:
+        print("Ошибка!")
+        return
     for row in record:
         productPrice = row[0]
 
@@ -167,6 +172,8 @@ def Buy():
             purchaseMoney = clientMoney - productPrice
             cursor.execute('UPDATE tClient SET money = %s WHERE tClient.clientID = %s', (purchaseMoney, chooseClient))
             conn.commit()
+            print("")
+            print("===========================")
             print("Покупка совершена успешно!")
             print("Текущий остаток: ", purchaseMoney, "$")
         else:
@@ -188,18 +195,18 @@ def editProduct():
     listProducts()
     print("Выберите продукт, который хотите изменить: ")
     chooseEditProduct = int(input())
-    cursor.execute('SELECT productID from tProduct')
-    record = cursor.fetchall()
+    try:
+        cursor.execute('SELECT productID from tProduct')
+        record = cursor.fetchall()
+    except:
+        print("Нет такого продукта!")
+        return
     for row in record:
         if chooseEditProduct == row[0]:
-            print("")
             break
-        else:
-            print("===================")
-            print("Нет такого продукта!")
-            print("===================")
-            return
-    cursor.execute('SELECT * FROM tProduct')
+
+    listChooseEditProduct = [chooseEditProduct]
+    cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseEditProduct))
     record = cursor.fetchall()
     for row in record:
         print("==================================================================================")
@@ -217,10 +224,13 @@ def editProduct():
         print("Изменить цену товара: ")
         editProductPrice = float(input())
 
-        # listChooseEditProduct = [chooseEditProduct]
-        cursor.execute("UPDATE tProduct SET productName = %s, productWeight = %s, productPrice = %s WHERE tProduct.productID = %s", (editProductName, editProductWeight, editProductPrice, chooseEditProduct))
-        conn.commit()
-        print("\n================================================================================")
+        try:
+            cursor.execute("UPDATE tProduct SET productName = %s, productWeight = %s, productPrice = %s WHERE tProduct.productID = %s", (editProductName, editProductWeight, editProductPrice, chooseEditProduct))
+            conn.commit()
+        except:
+            print("Изменение не удалось!")
+            return
+        print("\n=====================================================")
         print("Измененный продукт:", editProductName, "//", editProductWeight, "//", editProductPrice)
 
 
@@ -238,13 +248,14 @@ def editClient():
         if chooseEditClient == row[0]:
             print("")
             break
-        else:
-            print("========================")
-            print("Нет такого пользователя!")
-            print("========================")
-            return
-    cursor.execute('SELECT * FROM tClient')
-    record = cursor.fetchall()
+    
+    listChooseEditClient = [chooseEditClient]
+    try:
+        cursor.execute('SELECT * FROM tClient WHERE clientID = %s', (listChooseEditClient))
+        record = cursor.fetchall()
+    except:
+        print("Нет такого пользователя!")
+        return
     for row in record:
         print("=====================================================================================")
         print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
@@ -264,8 +275,12 @@ def editClient():
         print("Изменить бабки: ")
         editMoney = float(input())
 
-        listChooseEditClient = [chooseEditClient]
-        cursor.execute("UPDATE tProduct SET firstName = %s, lastName = %s, phone = %s, money = %s WHERE tClient.clientID = %s", (editFirstName, editLastName, editPhone, editMoney, listChooseEditClient))
-        conn.commit()
-        print("\n================================================================================")
-        print("Измененный пользователь:", editFirstName, "//", editLastName, "//", editPhone, "//", editMoney)
+        try:
+            cursor.execute("UPDATE tClient SET firstName = %s, lastName = %s, phone = %s, money = %s WHERE tClient.clientID = %s", (editFirstName, editLastName, editPhone, editMoney, chooseEditClient))
+            conn.commit()
+        except:
+            print("")
+            print("Изменение не удалось!")
+            return
+        print("\n===========================================================================")
+        print("Измененный пользователь:", editFirstName, "//", editLastName, "//", editPhone, "//", editMoney, "$")
