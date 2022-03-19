@@ -6,6 +6,7 @@ conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", pas
 cursor = conn.cursor()
 
 
+
 '''ВОЗВРАЩЕНИЕ В МЕНЮ'''
 
 def goNext():
@@ -17,6 +18,10 @@ def goNext():
         print("")
     else:
         quit()
+
+
+
+
 
 
 '''ДОБАВЛЕНИЕ КЛИЕНТА'''
@@ -49,6 +54,10 @@ def addClient():
         print("==================================")
 
 
+
+
+
+
 '''ДОБАВЛЕНИЕ ПРОДУКТА'''
 
 def addProduct():
@@ -74,6 +83,10 @@ def addProduct():
         print("Авария! Нет электричества! Ждём!")
 
 
+
+
+
+
 '''СПИСОК КЛИЕНТОВ'''
 
 def listClients():
@@ -90,6 +103,10 @@ def listClients():
         print("В наличии нет ни одного клиента!")
 
 
+
+
+
+
 '''СПИСОК ПРОДУКТОВ'''
 
 def listProducts():
@@ -104,6 +121,10 @@ def listProducts():
             print("==================================================================================")
     except:
         print("В наличии нет ни одного продукта!")
+
+
+
+
 
 
 '''ПОКУПКА'''
@@ -187,6 +208,10 @@ def Buy():
         return
 
 
+
+
+
+
 '''ИЗМЕНЕНИЕ ПРОДУКТА'''
 
 def editProduct():
@@ -232,6 +257,10 @@ def editProduct():
             return
         print("\n=====================================================")
         print("Измененный продукт:", editProductName, "//", editProductWeight, "//", editProductPrice)
+
+
+
+
 
 
 '''ИЗМЕНЕНИЕ КЛИЕНТА'''
@@ -284,3 +313,62 @@ def editClient():
             return
         print("\n===========================================================================")
         print("Измененный пользователь:", editFirstName, "//", editLastName, "//", editPhone, "//", editMoney, "$")
+
+
+
+
+
+
+def addMoney():
+    print("==============================")
+    print("Добавление денег пользователю")
+    print("==============================")
+    print("")
+    print("")
+    listClients()
+    print("Выберите пользователя, которому хотите добавить денег: ")
+    chooseClientToAddMoney = int(input())
+    cursor.execute('SELECT clientID from tClient')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseClientToAddMoney == row[0]:
+            print("")
+            break
+    
+    listChooseClientToAddMoney = [chooseClientToAddMoney]
+    try:
+        cursor.execute('SELECT * FROM tClient WHERE clientID = %s', (listChooseClientToAddMoney))
+        record = cursor.fetchall()
+    except:
+        print("Нет такого пользователя!")
+        return
+    for row in record:
+        print("=====================================================================================")
+        print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Кошелек: ", row[4], "$")
+        print("=====================================================================================\n")
+    print("Добавить денег этому пользователю?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        print("")
+        addMoney = 0
+        while addMoney == 0:
+            addMoney = float(input("Введите сумму: "))
+            if addMoney > 0:              
+                cursor.execute('SELECT money from tClient WHERE tClient.clientID = %s', (listChooseClientToAddMoney))
+                record = cursor.fetchall()
+                for row in record:
+                    checkMoney = row[0]
+                finalSum = checkMoney + addMoney
+                try:
+                    cursor.execute('UPDATE tClient SET money = %s WHERE tClient.clientID = %s', (finalSum, chooseClientToAddMoney))
+                    conn.commit()
+                except:
+                    print("")
+                    print("======================")
+                    print("Добавление не удалось!")
+                    print("======================")
+                    return
+                print("")
+                print("====================================")
+                print("Новый баланс пользователя: ", finalSum)
+                print("====================================")

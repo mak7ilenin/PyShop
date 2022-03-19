@@ -1,6 +1,6 @@
 from sqlite3 import Cursor
 import mysql.connector
-from functions import addClient, addProduct, listClients, listProducts, Buy, editProduct, editClient, goNext
+from functions import addClient, addProduct, listClients, listProducts, Buy, editProduct, editClient, goNext, addMoney
 
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
@@ -11,6 +11,7 @@ operation = 0
 
 while operation != 9:
     print("Выберите операцию: ")
+    print("0 - Выйти из программы")
     print("1 - Добавить покупателя")
     print("2 - Список покупателей")
     print("3 - Добавить продукт")
@@ -19,7 +20,6 @@ while operation != 9:
     print("6 - Изменить продукт")
     print("7 - Имзенить покупателя")
     print("8 - Добавить денег покупателю")
-    print("9 - Выйти из программы")
     choose = int(input())
     
     if choose == 1:
@@ -51,9 +51,10 @@ while operation != 9:
         goNext()
 
     elif choose == 8:
-        print("Добавить бабки: ")
-        addMoney = int(input())
+        addMoney()
+        goNext()
 
-    elif choose == 9:
-        print("Вы вышли")
+    elif choose == 0:
+        print("До свидания!")
+        conn.close()
         break
