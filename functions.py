@@ -27,6 +27,11 @@ def goNext():
 '''ДОБАВЛЕНИЕ КЛИЕНТА'''
 
 def addClient():
+    print("")
+    print("========================")
+    print("Добавление пользователя:")
+    print("========================")
+    print("")
     print("Введите имя: ")
     firstName = input()
     
@@ -61,6 +66,11 @@ def addClient():
 '''ДОБАВЛЕНИЕ ПРОДУКТА'''
 
 def addProduct():
+    print("")
+    print("====================")
+    print("Добавление продукта:")
+    print("====================")
+    print("")
     print("Введите название продукта: ")
     productName = input()
     
@@ -90,7 +100,11 @@ def addProduct():
 '''СПИСОК КЛИЕНТОВ'''
 
 def listClients():
+    print("")
+    print("=====================")
     print("Список пользователей: ")
+    print("=====================")
+    print("")
     try:
         cursor.execute('SELECT * FROM tClient')
         record = cursor.fetchall()
@@ -110,7 +124,11 @@ def listClients():
 '''СПИСОК ПРОДУКТОВ'''
 
 def listProducts():
+    print("")
+    print("=================")
     print("Список продуктов: ")
+    print("=================")
+    print("")
     try:
         cursor.execute('SELECT * FROM tProduct')
         record = cursor.fetchall()
@@ -130,8 +148,10 @@ def listProducts():
 '''ПОКУПКА'''
 
 def Buy():
-    print("Покупка продуктов")
-    print("===================")
+    print("")
+    print("==================")
+    print("Покупка продуктов:")
+    print("==================")
     listProducts()
 
     '''НАХОЖДЕНИЕ ПРОДУКТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
@@ -215,7 +235,9 @@ def Buy():
 '''ИЗМЕНЕНИЕ ПРОДУКТА'''
 
 def editProduct():
-    print("Изменение продукта")
+    print("")
+    print("===================")
+    print("Изменение продукта:")
     print("===================")
     listProducts()
     print("Выберите продукт, который хотите изменить: ")
@@ -266,8 +288,10 @@ def editProduct():
 '''ИЗМЕНЕНИЕ КЛИЕНТА'''
 
 def editClient():
-    print("Изменение пользователя")
-    print("===================")
+    print("")
+    print("=======================")
+    print("Изменение пользователя:")
+    print("=======================")
     listClients()
     print("Выберите пользователя, которого хотите изменить: ")
     chooseEditClient = int(input())
@@ -321,11 +345,10 @@ def editClient():
 '''ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ'''
 
 def addMoney():
-    print("==============================")
-    print("Добавление денег пользователю")
-    print("==============================")
     print("")
-    print("")
+    print("==============================")
+    print("Добавление денег пользователю:")
+    print("==============================")
     listClients()
     print("Выберите пользователя, которому хотите добавить денег: ")
     chooseClientToAddMoney = int(input())
