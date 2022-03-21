@@ -1,4 +1,3 @@
-from sqlite3 import Cursor
 import mysql.connector
 from functions import addClient, addProduct, listClients, listProducts, Buy, editProduct, editClient, goNext, addMoney, removeClient, removeProduct
 

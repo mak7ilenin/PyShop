@@ -1,13 +1,12 @@
-from sqlite3 import Cursor
 import mysql.connector
-from mysqlx import RowResult
+import datetime
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
 cursor = conn.cursor()
 
 
 
-'''ВОЗВРАЩЕНИЕ В МЕНЮ'''
+'''                                                 ВОЗВРАЩЕНИЕ В МЕНЮ'''
 
 def goNext():
     print("\n=========================")
@@ -24,7 +23,7 @@ def goNext():
 
 
 
-'''ДОБАВЛЕНИЕ КЛИЕНТА'''
+'''                                                 ДОБАВЛЕНИЕ КЛИЕНТА'''
 
 def addClient():
     print("")
@@ -63,7 +62,7 @@ def addClient():
 
 
 
-'''ДОБАВЛЕНИЕ ПРОДУКТА'''
+'''                                             ДОБАВЛЕНИЕ ПРОДУКТА'''
 
 def addProduct():
     print("")
@@ -97,7 +96,7 @@ def addProduct():
 
 
 
-'''СПИСОК КЛИЕНТОВ'''
+'''                                                 СПИСОК КЛИЕНТОВ'''
 
 def listClients():
     print("")
@@ -121,7 +120,7 @@ def listClients():
 
 
 
-'''СПИСОК ПРОДУКТОВ'''
+'''                                              СПИСОК ПРОДУКТОВ'''
 
 def listProducts():
     print("")
@@ -145,7 +144,7 @@ def listProducts():
 
 
 
-'''ПОКУПКА'''
+'''                                                     ПОКУПКА'''
 
 def Buy():
     print("")
@@ -243,7 +242,7 @@ def Buy():
 
 
 
-'''ИЗМЕНЕНИЕ ПРОДУКТА'''
+'''                                             ИЗМЕНЕНИЕ ПРОДУКТА'''
 
 def editProduct():
     print("")
@@ -307,7 +306,7 @@ def editProduct():
 
 
 
-'''ИЗМЕНЕНИЕ КЛИЕНТА'''
+'''                                             ИЗМЕНЕНИЕ КЛИЕНТА'''
 
 def editClient():
     print("")
@@ -373,7 +372,7 @@ def editClient():
 
 
 
-'''ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ'''
+'''                                             ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ'''
 
 def addMoney():
     print("")
@@ -441,7 +440,7 @@ def addMoney():
 
 
 
-'''УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ'''
+'''                                                 УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ'''
 
 def removeClient():
     print("\n//////////////////////")
@@ -461,25 +460,39 @@ def removeClient():
         print("========================")
         return
     listChooseClient = [chooseClient]
-    cursor.execute('SELECT firstName, lastName FROM tClient WHERE clientID = %s', (listChooseClient))
-    record = cursor.fetchall()
-    for row in record:
-        firstName = row[0]
-        lastName = row[1]
     try:
-        cursor.execute('DELETE FROM tClient WHERE clientID = %s', (listChooseClient))
-        conn.commit()
-        print("\n=========================================")
-        print("Удален пользователь", firstName, lastName)
-        print("=============================================")
+        cursor.execute('SELECT * FROM tClient WHERE clientID = %s', (listChooseClient))
+        record = cursor.fetchall()
     except:
-        print("Авария! Нет электричества! Ждём!")
+        return
+    for row in record:
+        print("=====================================================================================")
+        print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
+        print("=====================================================================================\n")
+    print("Удалить этого пользователя?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        cursor.execute('SELECT firstName, lastName FROM tClient WHERE clientID = %s', (listChooseClient))
+        record = cursor.fetchall()
+        for row in record:
+            firstName = row[0]
+            lastName = row[1]
+        try:
+            cursor.execute('DELETE FROM tClient WHERE clientID = %s', (listChooseClient))
+            conn.commit()
+            print("\n=============================================")
+            print("Удален пользователь", firstName, lastName)
+            print("=============================================")
+        except:
+            print("Авария! Нет электричества! Ждём!")
+    else:
+        return
 
 
 
 
 
-'''УДАЛЕНИЕ ПРОДУКТА'''
+'''                                             УДАЛЕНИЕ ПРОДУКТА'''
 
 def removeProduct():
     print("\n==================")
@@ -498,15 +511,26 @@ def removeProduct():
         print("Нет такого продукта!")
         return
     listChooseProduct = [chooseProduct]
-    cursor.execute("SELECT productName FROM tProduct WHERE productID = %s", (listChooseProduct))
+    cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseEditProduct))
     record = cursor.fetchall()
     for row in record:
-        productName = row[0]
-    try:
-        cursor.execute('DELETE FROM tProduct WHERE productID = %s', (listChooseProduct))
-        conn.commit()
-    except:
-        print("Авария! Нет электричества! Ждём!")
-    print("==========================================")
-    print(productName, "успешно удален(а)!")
-    print("==========================================")
+        print("==================================================================================")
+        print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+        print("==================================================================================\n")
+    print("Изменить этот продукт?")
+    booleanAnswer = int(input("1 - да // 2 - нет: "))
+    if booleanAnswer == 1:
+        cursor.execute("SELECT productName FROM tProduct WHERE productID = %s", (listChooseProduct))
+        record = cursor.fetchall()
+        for row in record:
+            productName = row[0]
+        try:
+            cursor.execute('DELETE FROM tProduct WHERE productID = %s', (listChooseProduct))
+            conn.commit()
+        except:
+            print("Авария! Нет электричества! Ждём!")
+        print("\n==========================================")
+        print(productName, "успешно удален(а)!")
+        print("==========================================")
+    else:
+        return
