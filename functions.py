@@ -28,9 +28,9 @@ def goNext():
 
 def addClient():
     print("")
-    print("========================")
+    print("////////////////////////")
     print("Добавление пользователя:")
-    print("========================")
+    print("////////////////////////")
     print("")
     print("Введите имя: ")
     firstName = input()
@@ -67,9 +67,9 @@ def addClient():
 
 def addProduct():
     print("")
-    print("====================")
+    print("////////////////////")
     print("Добавление продукта:")
-    print("====================")
+    print("////////////////////")
     print("")
     print("Введите название продукта: ")
     productName = input()
@@ -101,9 +101,9 @@ def addProduct():
 
 def listClients():
     print("")
-    print("=====================")
+    print("/////////////////////")
     print("Список пользователей: ")
-    print("=====================")
+    print("/////////////////////")
     print("")
     try:
         cursor.execute('SELECT * FROM tClient')
@@ -125,9 +125,9 @@ def listClients():
 
 def listProducts():
     print("")
-    print("=================")
+    print("/////////////////")
     print("Список продуктов: ")
-    print("=================")
+    print("/////////////////")
     print("")
     try:
         cursor.execute('SELECT * FROM tProduct')
@@ -149,9 +149,9 @@ def listProducts():
 
 def Buy():
     print("")
-    print("==================")
+    print("//////////////////")
     print("Покупка продуктов:")
-    print("==================")
+    print("//////////////////")
     listProducts()
 
     '''НАХОЖДЕНИЕ ПРОДУКТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
@@ -246,9 +246,9 @@ def Buy():
 
 def editProduct():
     print("")
-    print("===================")
+    print("///////////////////")
     print("Изменение продукта:")
-    print("===================")
+    print("///////////////////")
     listProducts()
     print("Выберите продукт, который хотите изменить: ")
     chooseEditProduct = int(input())
@@ -310,9 +310,9 @@ def editProduct():
 
 def editClient():
     print("")
-    print("=======================")
+    print("///////////////////////")
     print("Изменение пользователя:")
-    print("=======================")
+    print("///////////////////////")
     listClients()
     print("Выберите пользователя, которого хотите изменить: ")
     chooseEditClient = int(input())
@@ -376,9 +376,9 @@ def editClient():
 
 def addMoney():
     print("")
-    print("==============================")
+    print("//////////////////////////////")
     print("Добавление денег пользователю:")
-    print("==============================")
+    print("//////////////////////////////")
     listClients()
     print("Выберите пользователя, которому хотите добавить денег: ")
     chooseClientToAddMoney = int(input())
@@ -435,3 +435,41 @@ def addMoney():
                 print("====================================")
                 print("Новый баланс пользователя: ", finalSum)
                 print("====================================")
+
+
+
+
+
+'''УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ'''
+
+def removeClient():
+    print("\n//////////////////////")
+    print("Удаление пользователя:")
+    print("//////////////////////")
+    listClients()
+    print("Выберите пользователя, которого хотите удалить: ")
+    chooseClient = int(input())
+    cursor.execute('SELECT clientID from tClient')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseClient == row[0]:
+            print("")
+            break
+    if chooseClient != row[0]:
+        print("Нет такого пользователя!")
+        print("========================")
+        return
+    listChooseClient = [chooseClient]
+    cursor.execute('SELECT firstName, lastName FROM tClient WHERE clientID = %s', (listChooseClient))
+    record = cursor.fetchall()
+    for row in record:
+        firstName = row[0]
+        lastName = row[1]
+    try:
+        cursor.execute('DELETE FROM tClient WHERE clientID = %s', (listChooseClient))
+        conn.commit()
+        print("\n=========================================")
+        print("Удален пользователь", firstName, lastName)
+        print("=============================================")
+    except:
+        print("Авария! Нет электричества! Ждём!")
