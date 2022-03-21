@@ -511,7 +511,7 @@ def removeProduct():
         print("Нет такого продукта!")
         return
     listChooseProduct = [chooseProduct]
-    cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseEditProduct))
+    cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseProduct))
     record = cursor.fetchall()
     for row in record:
         print("==================================================================================")
