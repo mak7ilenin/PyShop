@@ -163,15 +163,11 @@ def Buy():
             print("")
             break
     if chooseProduct != row[0]:
-            print("\nНет такого продукта!")
-            print("\n==========================================")
-            print("Хотите ли вы добавить новый продукт?")
-            print("==========================================")
-            booleanAns = int(input("1 - да // 2 - нет: "))
-            if booleanAns == 1:
-                addProduct()
-            else:
-                return
+        print("\n====================")
+        print("Нет такого продукта!")
+        print("====================")
+        return
+    
     print("===================")
     listClients()   
     
@@ -184,15 +180,11 @@ def Buy():
             print("")
             break
     if chooseClient != row[0]:
-            print("\nНет такого клиента!")
-            print("\n==========================================")
-            print("Хотите ли вы добавить нового клиента?")
-            print("==========================================")
-            booleanAns = int(input("1 - да // 2 - нет: "))
-            if booleanAns == 1:
-                addClient()
-            else:
-                return
+        print("\n===================")
+        print("Нет такого клиента!")
+        print("===================")
+        return
+
     '''НАХОЖДЕНИЕ ДЕНЕГ КЛИЕНТА ПО ЕГО ID '''
 
     listChooseClient = [chooseClient]
