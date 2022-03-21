@@ -1,12 +1,13 @@
 import mysql.connector
-import datetime
+import time
 
 conn = mysql.connector.connect(host="localhost", port="3306", user="pyshop", password="pyshop", database="pyshop")
 cursor = conn.cursor()
+time_local = time.localtime()
 
 
 
-'''                                                 ВОЗВРАЩЕНИЕ В МЕНЮ'''
+                                                # ВОЗВРАЩЕНИЕ В МЕНЮ
 
 def goNext():
     print("\n=========================")
@@ -23,7 +24,7 @@ def goNext():
 
 
 
-'''                                                 ДОБАВЛЕНИЕ КЛИЕНТА'''
+                                                #  ДОБАВЛЕНИЕ КЛИЕНТА
 
 def addClient():
     print("")
@@ -62,7 +63,7 @@ def addClient():
 
 
 
-'''                                             ДОБАВЛЕНИЕ ПРОДУКТА'''
+                                            #  ДОБАВЛЕНИЕ ПРОДУКТА
 
 def addProduct():
     print("")
@@ -96,7 +97,7 @@ def addProduct():
 
 
 
-'''                                                 СПИСОК КЛИЕНТОВ'''
+                                                #  СПИСОК КЛИЕНТОВ
 
 def listClients():
     print("")
@@ -120,7 +121,7 @@ def listClients():
 
 
 
-'''                                              СПИСОК ПРОДУКТОВ'''
+                                            #   СПИСОК ПРОДУКТОВ
 
 def listProducts():
     print("")
@@ -144,7 +145,7 @@ def listProducts():
 
 
 
-'''                                                     ПОКУПКА'''
+                                                    #  ПОКУПКА
 
 def Buy():
     print("")
@@ -218,9 +219,17 @@ def Buy():
     print("Купить этот продукт?")
     booleanAnswer = int(input("1 - да // 2 - нет: "))
     if booleanAnswer == 1:
+        try:
+            cursor.execute('CREATE TABLE tHistory(ID int AUTO_INCREMENT primary key, buy datetime, product_id bigint(20) not null, client_id bigint(20) not null)')
+            conn.commit()
+        except:
+            print("")
         if clientMoney >= productPrice:
             purchaseMoney = clientMoney - productPrice
+            buyTime = time.strftime('%d.%m.%Y. %H:%M:%S', time_local)
             cursor.execute('UPDATE tClient SET money = %s WHERE tClient.clientID = %s', (purchaseMoney, chooseClient))
+            conn.commit()
+            cursor.execute('INSERT INTO VALUES(null, %s, %s, %s)'(buyTime, chooseProduct, chooseClient))
             conn.commit()
             print("")
             print("===========================")
@@ -242,7 +251,7 @@ def Buy():
 
 
 
-'''                                             ИЗМЕНЕНИЕ ПРОДУКТА'''
+                                            # ИЗМЕНЕНИЕ ПРОДУКТА
 
 def editProduct():
     print("")
@@ -306,7 +315,7 @@ def editProduct():
 
 
 
-'''                                             ИЗМЕНЕНИЕ КЛИЕНТА'''
+                                            # ИЗМЕНЕНИЕ КЛИЕНТА
 
 def editClient():
     print("")
@@ -372,7 +381,7 @@ def editClient():
 
 
 
-'''                                             ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ'''
+                                        #    ДОБАВЛЕНИЕ ДЕНЕГ ПОЛЬЗОВАТЕЛЮ
 
 def addMoney():
     print("")
@@ -440,7 +449,7 @@ def addMoney():
 
 
 
-'''                                                 УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ'''
+                                                # УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
 
 def removeClient():
     print("\n//////////////////////")
@@ -492,7 +501,7 @@ def removeClient():
 
 
 
-'''                                             УДАЛЕНИЕ ПРОДУКТА'''
+                                            #  УДАЛЕНИЕ ПРОДУКТА
 
 def removeProduct():
     print("\n==================")
@@ -517,7 +526,7 @@ def removeProduct():
         print("==================================================================================")
         print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
         print("==================================================================================\n")
-    print("Изменить этот продукт?")
+    print("Удалить этот продукт?")
     booleanAnswer = int(input("1 - да // 2 - нет: "))
     if booleanAnswer == 1:
         cursor.execute("SELECT productName FROM tProduct WHERE productID = %s", (listChooseProduct))
