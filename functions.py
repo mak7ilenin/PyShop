@@ -101,9 +101,9 @@ def addProduct():
 
 def listClients():
     print("")
-    print("/////////////////////")
+    print("=====================")
     print("Список пользователей: ")
-    print("/////////////////////")
+    print("=====================")
     print("")
     try:
         cursor.execute('SELECT * FROM tClient')
@@ -125,9 +125,9 @@ def listClients():
 
 def listProducts():
     print("")
-    print("/////////////////")
+    print("=================")
     print("Список продуктов: ")
-    print("/////////////////")
+    print("=================")
     print("")
     try:
         cursor.execute('SELECT * FROM tProduct')
@@ -155,7 +155,7 @@ def Buy():
     listProducts()
 
     '''НАХОЖДЕНИЕ ПРОДУКТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
-    chooseProduct = int(input("Выберите продукт: "))
+    chooseProduct = int(input("Выберите продукт по его номеру: "))
     cursor.execute('SELECT productID FROM tProduct')
     record = cursor.fetchall()
     for row in record:
@@ -172,7 +172,7 @@ def Buy():
     listClients()   
     
     '''НАХОЖДЕНИЕ КЛИЕНТА ПО ЕГО ID И СРАВНИВАНИЕ С ВЫБОРОМ ПРОГРАММЫ'''
-    chooseClient = int(input("Выберите клиента: "))
+    chooseClient = int(input("Выберите клиента по его номеру: "))
     cursor.execute('SELECT clientID FROM tClient')
     record = cursor.fetchall()
     for row in record:
@@ -226,6 +226,7 @@ def Buy():
             print("")
             print("===========================")
             print("Покупка совершена успешно!")
+            print("--------------------------")
             print("Текущий остаток: ", purchaseMoney, "$")
         else:
             print("")
@@ -250,7 +251,7 @@ def editProduct():
     print("Изменение продукта:")
     print("///////////////////")
     listProducts()
-    print("Выберите продукт, который хотите изменить: ")
+    print("Выберите продукт по его номеру, который хотите изменить: ")
     chooseEditProduct = int(input())
     try:
         cursor.execute('SELECT productID from tProduct')
@@ -314,7 +315,7 @@ def editClient():
     print("Изменение пользователя:")
     print("///////////////////////")
     listClients()
-    print("Выберите пользователя, которого хотите изменить: ")
+    print("Выберите пользователя по его номеру, которого хотите изменить: ")
     chooseEditClient = int(input())
     cursor.execute('SELECT clientID from tClient')
     record = cursor.fetchall()
@@ -380,7 +381,7 @@ def addMoney():
     print("Добавление денег пользователю:")
     print("//////////////////////////////")
     listClients()
-    print("Выберите пользователя, которому хотите добавить денег: ")
+    print("Выберите пользователя по его номеру, которому хотите добавить денег: ")
     chooseClientToAddMoney = int(input())
     cursor.execute('SELECT clientID from tClient')
     record = cursor.fetchall()
@@ -447,7 +448,7 @@ def removeClient():
     print("Удаление пользователя:")
     print("//////////////////////")
     listClients()
-    print("Выберите пользователя, которого хотите удалить: ")
+    print("Выберите пользователя по его номеру, которого хотите удалить: ")
     chooseClient = int(input())
     cursor.execute('SELECT clientID from tClient')
     record = cursor.fetchall()
@@ -473,3 +474,39 @@ def removeClient():
         print("=============================================")
     except:
         print("Авария! Нет электричества! Ждём!")
+
+
+
+
+
+'''УДАЛЕНИЕ ПРОДУКТА'''
+
+def removeProduct():
+    print("\n==================")
+    print("Удаление продукта:")
+    print("==================")
+    listProducts()
+    print("Выберите продукт по его номеру, который хотите удалить")
+    chooseProduct = int(input())
+    cursor.execute('SELECT productID FROM tProduct')
+    record = cursor.fetchall()
+    for row in record:
+        if chooseProduct == row[0]:
+            print("")
+            break
+    if chooseProduct != row[0]:
+        print("Нет такого продукта!")
+        return
+    listChooseProduct = [chooseProduct]
+    cursor.execute("SELECT productName FROM tProduct WHERE productID = %s", (listChooseProduct))
+    record = cursor.fetchall()
+    for row in record:
+        productName = row[0]
+    try:
+        cursor.execute('DELETE FROM tProduct WHERE productID = %s', (listChooseProduct))
+        conn.commit()
+    except:
+        print("Авария! Нет электричества! Ждём!")
+    print("==========================================")
+    print(productName, "успешно удален(а)!")
+    print("==========================================")
