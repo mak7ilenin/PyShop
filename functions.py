@@ -162,7 +162,16 @@ def Buy():
         if chooseProduct == row[0]:
             print("")
             break
-
+    if chooseProduct != row[0]:
+            print("\nНет такого продукта!")
+            print("\n==========================================")
+            print("Хотите ли вы добавить новый продукт?")
+            print("==========================================")
+            booleanAns = int(input("1 - да // 2 - нет: "))
+            if booleanAns == 1:
+                addProduct()
+            else:
+                return
     print("===================")
     listClients()   
     
@@ -174,7 +183,16 @@ def Buy():
         if chooseClient == row[0]:
             print("")
             break
-    
+    if chooseClient != row[0]:
+            print("\nНет такого клиента!")
+            print("\n==========================================")
+            print("Хотите ли вы добавить нового клиента?")
+            print("==========================================")
+            booleanAns = int(input("1 - да // 2 - нет: "))
+            if booleanAns == 1:
+                addClient()
+            else:
+                return
     '''НАХОЖДЕНИЕ ДЕНЕГ КЛИЕНТА ПО ЕГО ID '''
 
     listChooseClient = [chooseClient]
@@ -250,8 +268,18 @@ def editProduct():
         return
     for row in record:
         if chooseEditProduct == row[0]:
+            print("")
             break
-
+    if chooseEditProduct != row[0]:
+        print("\nНет такого продукта!")
+        print("\n==========================================")
+        print("Хотите ли вы добавить новый продукт?")
+        print("==========================================")
+        booleanAns = int(input("1 - да // 2 - нет"))
+        if booleanAns == 1:
+            addProduct()
+        else:
+            return
     listChooseEditProduct = [chooseEditProduct]
     cursor.execute('SELECT * FROM tProduct WHERE productID = %s', (listChooseEditProduct))
     record = cursor.fetchall()
@@ -285,6 +313,7 @@ def editProduct():
 
 
 
+
 '''ИЗМЕНЕНИЕ КЛИЕНТА'''
 
 def editClient():
@@ -301,7 +330,16 @@ def editClient():
         if chooseEditClient == row[0]:
             print("")
             break
-    
+    if chooseEditClient != row[0]:
+        print("\nНет такого пользователя!")
+        print("\n==========================================")
+        print("Хотите ли вы добавить нового пользователя?")
+        print("==========================================")
+        booleanAns = int(input("1 - да // 2 - нет: "))
+        if booleanAns == 1:
+            addClient()
+        else:
+            return
     listChooseEditClient = [chooseEditClient]
     try:
         cursor.execute('SELECT * FROM tClient WHERE clientID = %s', (listChooseEditClient))
@@ -358,7 +396,16 @@ def addMoney():
         if chooseClientToAddMoney == row[0]:
             print("")
             break
-    
+    if chooseClientToAddMoney != row[0]:
+        print("\nНет такого пользователя!")
+        print("\n==========================================")
+        print("Хотите ли вы добавить нового пользователя?")
+        print("==========================================")
+        booleanAns = int(input("1 - да // 2 - нет"))
+        if booleanAns == 1:
+            addClient()
+        else:
+            return
     listChooseClientToAddMoney = [chooseClientToAddMoney]
     try:
         cursor.execute('SELECT * FROM tClient WHERE clientID = %s', (listChooseClientToAddMoney))
