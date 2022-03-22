@@ -220,19 +220,20 @@ def Buy():
     booleanAnswer = int(input("1 - да // 2 - нет: "))
     if booleanAnswer == 1:
         try:
-            cursor.execute('CREATE TABLE tHistory(ID int AUTO_INCREMENT primary key, buy datetime, product_id bigint(20) not null, client_id bigint(20) not null)')
+            cursor.execute('CREATE TABLE tHistory(ID int AUTO_INCREMENT primary key, buy varchar(30), product_id bigint(20) not null, client_id bigint(20) not null)')
             conn.commit()
         except:
             print("")
         if clientMoney >= productPrice:
             purchaseMoney = clientMoney - productPrice
-            buyTime = time.strftime('%d.%m.%Y. %H:%M:%S', time_local)
+            buyTime = time.strftime("%Y-%d-%m %H:%M:%S", time_local)
+            print(buyTime)
             cursor.execute('UPDATE tClient SET money = %s WHERE tClient.clientID = %s', (purchaseMoney, chooseClient))
             conn.commit()
-            cursor.execute('INSERT INTO VALUES(null, %s, %s, %s)'(buyTime, chooseProduct, chooseClient))
+            cursor.execute('INSERT INTO tHistory (ID, buy, product_id, client_id) VALUES(null, %s, %s, %s)', (buyTime, chooseProduct, chooseClient))
             conn.commit()
             print("")
-            print("===========================")
+            print("==========================")
             print("Покупка совершена успешно!")
             print("--------------------------")
             print("Текущий остаток: ", purchaseMoney, "$")
