@@ -105,16 +105,20 @@ def listClients():
     print("Список пользователей: ")
     print("=====================")
     print("")
-    try:
-        cursor.execute('SELECT * FROM tClient')
-        record = cursor.fetchall()
-        print("==================================================================================")
-        for row in record:
-            print("Пользователь номер -", row[0])
-            print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
+    record = cursor.execute('SELECT * FROM tClient limit 1')
+    if not record:
+        print("Пользователи отсутсвуют!")
+    else:
+        try:
+            cursor.execute('SELECT * FROM tClient')
+            record = cursor.fetchall()
             print("==================================================================================")
-    except:
-        print("В наличии нет ни одного клиента!")
+            for row in record:
+                print("Пользователь номер -", row[0])
+                print("Имя: ", row[1], "//", "Фамилия: ", row[2], "//", "Телефон: ", row[3], "//", "Кошелек: ", row[4], "$")
+                print("==================================================================================")
+        except:
+            print("В наличии нет ни одного клиента!")
 
 
 
@@ -129,16 +133,21 @@ def listProducts():
     print("Список продуктов: ")
     print("=================")
     print("")
-    try:
-        cursor.execute('SELECT * FROM tProduct')
-        record = cursor.fetchall()
-        print("==================================================================================")
-        for row in record:
-            print("Продукт номер -", row[0])
-            print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+
+    record = cursor.execute('SELECT *  FROM tProduct limit 1')
+    if not record:
+        print("Товары отсутсвуют!")
+    else:
+        try:
+            cursor.execute('SELECT * FROM tProduct')
+            record = cursor.fetchall()
             print("==================================================================================")
-    except:
-        print("В наличии нет ни одного продукта!")
+            for row in record:
+                print("Продукт номер -", row[0])
+                print("Название: ", row[1], "//" , "Вес: ", row[2], "г", "//", "Цена: ", row[3], "$")
+                print("==================================================================================")
+        except:
+            print("В наличии нет ни одного продукта!")
 
 
 
